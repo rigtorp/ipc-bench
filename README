@@ -4,6 +4,7 @@ ipc-bench
 Some very crude IPC latency benchmarks. Measures one way message passing latency.
 
  * pipes-busy.c - Measure latency of IPC using busy reading pipes 
+ * pipes-poll.c - Measure latency of IPC using poll with pipes
  * pipes.c - Measure latency of IPC using pipes
  * pqueues.c - Measure latency of IPC using POSIX message queues
  * pshm.c - Measure latency of IPC using shm and POSIX threads locking primitives

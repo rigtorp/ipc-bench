@@ -1,7 +1,7 @@
 
 CFLAGS = -lrt
 
-all: pipes pipes-busy queues pqueues spair tcp shm pshm
+all: pipes pipes-busy pipes-poll queues pqueues spair tcp shm pshm
 
 clean:
-	rm -f *~ pipes pipes-busy queues pqueues spair tcp shm pshm
+	rm -f *~ pipes pipes-busy pipes-poll queues pqueues spair tcp shm pshm
