@@ -1,14 +1,21 @@
 ipc-bench
 =========
 
-Some very crude IPC latency benchmarks. Measures one way message passing latency.
+Some very crude IPC benchmarks.
 
- * pipes-busy.c - Measure latency of IPC using busy reading pipes 
- * pipes-poll.c - Measure latency of IPC using poll with pipes
- * pipes.c - Measure latency of IPC using pipes
- * pqueues.c - Measure latency of IPC using POSIX message queues
- * pshm.c - Measure latency of IPC using shm and POSIX threads locking primitives
- * queues.c - Measure latency of IPC using SYS V queues
- * shm.c - Measure latency of IPC using shm
- * spair.c - Measure latency of IPC using unix domain sockets 
- * tcp.c - Measure latency of IPC using TCP sockets
+ping-pong latency benchmarks:
+* pipes
+* unix domain sockets
+* tcp sockets
+
+throughput benchmarks:
+* pipes
+* unix doamin sockets
+* tcp sockets
+
+one way latency benchmarks:
+* shm
+
+The shared memory benchmark is a kind of "control". If run under a
+real-time OS it will give you the intra core communication
+latency.
