@@ -1,9 +1,5 @@
 /* Measure throughput of IPC using tcp sockets */
 
-/* Needs more work, only works for message size 1. 
- * TODO: implement message framing
- */
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/socket.h>
@@ -20,6 +16,8 @@ int main(int argc, char *argv[])
   int64_t count, i, delta;
   struct timespec start, stop;
 
+  ssize_t len;
+  size_t sofar;
 
   int yes = 1;
   struct sockaddr_storage their_addr;
@@ -81,11 +79,13 @@ int main(int argc, char *argv[])
       exit(1);
     } 
 
-    for (i = 0; i < count; i++) {      
-      if (read(new_fd, buf, size) != size) {
-        perror("read");
+    for (sofar = 0; sofar < (count * size);) {
+      len = read(new_fd, buf, size);
+      if (len == -1) {
+	perror("read");
         exit(1);
       }
+      sofar += len;
     }
   } else { 
     /* parent */
