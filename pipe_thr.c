@@ -41,7 +41,7 @@ int main(int argc, char *argv[])
   int size;
   char *buf;
   int64_t count, i, delta;
-  struct timespec start, stop;
+  struct timeval start, stop;
 
   if (argc != 3) {
     printf ("usage: pipe_thr <message-size> <message-count>\n");
@@ -76,21 +76,23 @@ int main(int argc, char *argv[])
     }
   } else { 
     /* parent */
-  
-    clock_gettime(CLOCK_MONOTONIC, &start);
+
+    gettimeofday(&start);
+
     for (i = 0; i < count; i++) {
       if (write(fds[1], buf, size) != size) {
         perror("write");
         exit(1);
       }
     }
-    clock_gettime(CLOCK_MONOTONIC, &stop);
 
-    delta = ((stop.tv_sec - start.tv_sec) * (int64_t) 1e9 +
-	     stop.tv_nsec - start.tv_nsec);
+    gettimeofday(&stop);
 
-    printf("average throughput: %lli msg/s\n", (count * (int64_t) 1e9) / delta);
-    printf("average throughput: %lli Mb/s\n", (((count * (int64_t) 1e9) / delta) * size * 8) / (int64_t) 1e6);
+    delta = ((stop.tv_sec - start.tv_sec) * (int64_t) 1e6 +
+	     stop.tv_usec - start.tv_usec);
+
+    printf("average throughput: %lli msg/s\n", (count * (int64_t) 1e6) / delta);
+    printf("average throughput: %lli Mb/s\n", (((count * (int64_t) 1e6) / delta) * size * 8) / (int64_t) 1e6);
   }
   
   return 0;

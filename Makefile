@@ -1,7 +1,7 @@
 
-CFLAGS = -lrt
-
 all: pipe_lat pipe_thr unix_lat unix_thr tcp_lat tcp_thr shm 
+
+shm: CFLAGS = -lrt
 
 run:
 	./pipe_lat 100 10000

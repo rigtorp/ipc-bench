@@ -42,7 +42,7 @@ int main(int argc, char *argv[])
   int size;
   char *buf;
   int64_t count, i, delta;
-  struct timespec start, stop;
+  struct timeval start, stop;
 
   if (argc != 3) {
     printf ("usage: pipe_lat <message-size> <roundtrip-count>\n");
@@ -86,7 +86,7 @@ int main(int argc, char *argv[])
     }
   } else { /* parent */
   
-    clock_gettime(CLOCK_MONOTONIC, &start);
+    gettimeofday(&start);
 
     for (i = 0; i < count; i++) {
 
@@ -102,12 +102,12 @@ int main(int argc, char *argv[])
       
     }
 
-    clock_gettime(CLOCK_MONOTONIC, &stop);
+    gettimeofday(&stop);
 
-    delta = ((stop.tv_sec - start.tv_sec) * (int64_t) 1000000000 +
-	     stop.tv_nsec - start.tv_nsec);
+    delta = ((stop.tv_sec - start.tv_sec) * (int64_t) 1000000 +
+	     stop.tv_usec - start.tv_usec);
     
-    printf("average latency: %lli ns\n", delta / (count * 2));
+    printf("average latency: %lli us\n", delta / (count * 2));
 
   }
   
