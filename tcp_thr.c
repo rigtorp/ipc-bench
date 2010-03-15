@@ -48,6 +48,7 @@ int main(int argc, char *argv[])
   size_t sofar;
 
   int yes = 1;
+  int ret;
   struct sockaddr_storage their_addr;
   socklen_t addr_size;
   struct addrinfo hints;
@@ -72,7 +73,10 @@ int main(int argc, char *argv[])
   hints.ai_family = AF_UNSPEC;  // use IPv4 or IPv6, whichever
   hints.ai_socktype = SOCK_STREAM;
   hints.ai_flags = AI_PASSIVE;     // fill in my IP for me
-  getaddrinfo("127.0.0.1", "3491", &hints, &res);
+  if ((ret = getaddrinfo("127.0.0.1", "3491", &hints, &res)) != 0) {
+    fprintf(stderr, "getaddrinfo: %s\n", gai_strerror(ret));
+    return 1;
+  }
 
   printf("message size: %i octets\n", size);
   printf("message count: %lli\n", count);
