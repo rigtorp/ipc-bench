@@ -139,7 +139,7 @@ int main(int argc, char *argv[])
       exit(1);
     }
 
-    gettimeofday(&start);
+    gettimeofday(&start, NULL);
 
     for (i = 0; i < count; i++) {
 
@@ -159,7 +159,7 @@ int main(int argc, char *argv[])
       
     }
 
-    gettimeofday(&stop);
+    gettimeofday(&stop, NULL);
 
     delta = ((stop.tv_sec - start.tv_sec) * (int64_t) 1e6 +
 	     stop.tv_usec - start.tv_usec);
