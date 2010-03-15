@@ -1,7 +1,13 @@
 
-all: pipe_lat pipe_thr unix_lat unix_thr tcp_lat tcp_thr shm 
+CFLAGS = -g
 
-shm: CFLAGS = -lrt
+all: pipe_lat pipe_thr \
+	unix_lat unix_thr \
+	tcp_lat tcp_thr \
+	tcp_local_lat tcp_remote_lat \
+	shm
+
+shm: CFLAGS += -lrt
 
 run:
 	./pipe_lat 100 10000
@@ -12,4 +18,9 @@ run:
 	./tcp_thr 100 10000
 
 clean:
-	rm -f *~ pipe_lat pipe_thr unix_lat unix_thr tcp_lat tcp_thr shm 
+	rm -f *~ core
+	rm -f pipe_lat pipe_thr 
+	rm -f unix_lat unix_thr 
+	rm -f tcp_lat tcp_thr 
+	rm -f tcp_local_lat tcp_remote_lat
+	rm -f shm 
