@@ -53,7 +53,7 @@ int main(void)
     }
 
     while (1) {
-      clock_gettime(CLOCK_MONOTONIC, shm);
+      gettimeofday(shm, NULL);
 
       usleep(10000);
     }
@@ -79,7 +79,7 @@ int main(void)
     while (1) {
       while ((shm->tv_sec == start.tv_sec) && (shm->tv_nsec == start.tv_nsec)) {}
 
-      clock_gettime(CLOCK_MONOTONIC, &stop);
+      gettimeofday(&stop, NULL);
       start = *shm;
       delta = ((stop.tv_sec - start.tv_sec) * (int64_t) 1000000000 +
                stop.tv_nsec - start.tv_nsec);
