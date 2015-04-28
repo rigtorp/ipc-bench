@@ -134,6 +134,11 @@ int main(int argc, char *argv[])
       exit(1);
     }
     
+    if (setsockopt(sockfd, IPPROTO_TCP, TCP_NODELAY, &yes, sizeof(int)) == -1) {
+      perror("setsockopt");
+      exit(1);
+    }
+    
     gettimeofday(&start, NULL);
 
     for (i = 0; i < count; i++) {
