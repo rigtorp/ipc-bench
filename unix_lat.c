@@ -32,6 +32,11 @@
 #include <sys/socket.h>
 #include <time.h>
 #include <stdint.h>
+#include <unistd.h>
+
+#if defined(_POSIX_TIMERS) && (_POSIX_TIMERS > 0) && defined(_POSIX_MONOTONIC_CLOCK)
+#define HAS_CLOCK_GETTIME_MONOTONIC
+#endif
 
 
 int main(int argc, char *argv[])
@@ -40,7 +45,11 @@ int main(int argc, char *argv[])
   int size;
   char *buf;
   int64_t count, i, delta;
+#ifdef HAS_CLOCK_GETTIME_MONOTONIC
+  struct timespec start, stop;
+#else
   struct timeval start, stop;
+#endif
 
   if (argc != 3) {
     printf ("usage: unix_lat <message-size> <roundtrip-count>\n");
@@ -79,7 +88,17 @@ int main(int argc, char *argv[])
     }
   } else { /* parent */
 
-    gettimeofday(&start, NULL);
+#ifdef HAS_CLOCK_GETTIME_MONOTONIC
+    if (clock_gettime(CLOCK_MONOTONIC, &start) == -1) {
+      perror("clock_gettime");
+      return 1;
+    }
+#else
+    if (gettimeofday(&start, NULL) == -1) {
+      perror("gettimeofday");
+      return 1;
+    }
+#endif
 
     for (i = 0; i < count; i++) {
 
@@ -92,14 +111,29 @@ int main(int argc, char *argv[])
         perror("read");
         return 1;
       }
-      
+
     }
 
-    gettimeofday(&stop, NULL);
+#ifdef HAS_CLOCK_GETTIME_MONOTONIC
+    if (clock_gettime(CLOCK_MONOTONIC, &stop) == -1) {
+      perror("clock_gettime");
+      return 1;
+    }
 
-    delta = ((stop.tv_sec - start.tv_sec) * (int64_t) 1e6 +
-	     stop.tv_usec - start.tv_usec);
-    
+    delta = ((stop.tv_sec - start.tv_sec) * 1000000 +
+             (stop.tv_nsec - start.tv_nsec) / 1000);
+
+#else
+    if (gettimeofday(&stop, NULL) == -1) {
+      perror("gettimeofday");
+      return 1;
+    }
+
+    delta = (stop.tv_sec - start.tv_sec) * 1000000 +
+            (stop.tv_usec - start.tv_usec);
+
+#endif
+
     printf("average latency: %lli us\n", delta / (count * 2));
 
   }
