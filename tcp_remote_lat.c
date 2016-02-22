@@ -46,13 +46,10 @@ int main(int argc, char *argv[])
   ssize_t len;
   size_t sofar;
 
-  int yes = 1;
   int ret;
-  struct sockaddr_storage their_addr;
-  socklen_t addr_size;
   struct addrinfo hints;
   struct addrinfo *res;
-  int sockfd, new_fd;
+  int sockfd;
 
   if (argc != 6) {
     printf ("usage: tcp_lat <bind-to> <host> <port> <message-size> <roundtrip-count>\n");

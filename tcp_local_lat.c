@@ -40,8 +40,7 @@ int main(int argc, char *argv[])
 {
   int size;
   char *buf;
-  int64_t count, i, delta;
-  struct timeval start, stop;
+  int64_t count, i;
 
   ssize_t len;
   size_t sofar;

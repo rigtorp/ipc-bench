@@ -10,9 +10,6 @@
 
 int main(void)
 {
-  int pfds[2];
-  
-  char c;
   int shmid;
   key_t key;
   struct timespec *shm;
