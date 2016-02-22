@@ -39,7 +39,7 @@ int main(void)
      */
     if ((shmid = shmget(key, 100, IPC_CREAT | 0666)) < 0) {
       perror("shmget");
-      exit(1);
+      return 1;
     }
 
     /*
@@ -47,7 +47,7 @@ int main(void)
      */
     if ((shm = shmat(shmid, NULL, 0)) == (struct timespec*) -1) {
       perror("shmat");
-      exit(1);
+      return 1;
     }
 
     while (1) {
@@ -63,7 +63,7 @@ int main(void)
      */
     if ((shmid = shmget(key, 100, 0666)) < 0) {
       perror("shmget");
-      exit(1);
+      return 1;
     }
 
     /*
@@ -71,7 +71,7 @@ int main(void)
      */
     if ((shm = shmat(shmid, NULL, 0)) == (struct timespec *) -1) {
       perror("shmat");
-      exit(1);
+      return 1;
     }
 
     while (1) {

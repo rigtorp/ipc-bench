@@ -61,7 +61,7 @@ int main(int argc, char *argv[])
 
   if (socketpair(AF_UNIX, SOCK_STREAM, 0, sv) == -1) {
     perror("socketpair");
-    exit(1);
+    return 1;
   }
 
   if (!fork()) {  /* child */

@@ -44,16 +44,16 @@ int main(int argc, char *argv[])
 
   if (argc != 3) {
     printf ("usage: unix_thr <message-size> <message-count>\n");
-    exit(1);
+    return 1;
   }
-  
+
   size = atoi(argv[1]);
   count = atol(argv[2]);
 
   buf = malloc(size);
   if (buf == NULL) {
     perror("malloc");
-    exit(1);
+    return 1;
   }
 
   printf("message size: %i octets\n", size);
@@ -61,7 +61,7 @@ int main(int argc, char *argv[])
 
   if (socketpair(AF_UNIX, SOCK_STREAM, 0, fds) == -1) {
     perror("socketpair");
-    exit(1);
+    return 1;
   }
 
   if (!fork()) {
@@ -70,7 +70,7 @@ int main(int argc, char *argv[])
     for (i = 0; i < count; i++) {
       if (read(fds[1], buf, size) != size) {
         perror("read");
-	exit(1);
+        return 1;
       }
     }
   } else {
@@ -81,7 +81,7 @@ int main(int argc, char *argv[])
     for (i = 0; i < count; i++) {
       if (write(fds[0], buf, size) != size) {
         perror("write");
-        exit(1);
+        return 1;
       }
     }
 

@@ -82,12 +82,12 @@ int main(int argc, char *argv[])
 
   if ((sockfd = socket(res->ai_family, res->ai_socktype, res->ai_protocol)) == -1) {
     perror("socket");
-    exit(1);
+    return 1;
   }
 
   if (bind(sockfd, res->ai_addr, res->ai_addrlen) == -1) {
     perror("bind");
-    exit(1);
+    return 1;
   }
 
   if ((ret = getaddrinfo(argv[2], argv[3], &hints, &res)) != 0) {
@@ -97,7 +97,7 @@ int main(int argc, char *argv[])
 
   if (connect(sockfd, res->ai_addr, res->ai_addrlen) == -1) {
     perror("connect");
-    exit(1);
+    return 1;
   }
 
   gettimeofday(&start);

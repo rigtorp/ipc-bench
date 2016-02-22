@@ -84,30 +84,30 @@ int main(int argc, char *argv[])
 
     if ((sockfd = socket(res->ai_family, res->ai_socktype, res->ai_protocol)) == -1) {
       perror("socket");
-      exit(1);
+      return 1;
     }
 
     if (setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(int)) == -1) {
       perror("setsockopt");
-      exit(1);
-    } 
-    
+      return 1;
+    }
+
     if (bind(sockfd, res->ai_addr, res->ai_addrlen) == -1) {
       perror("bind");
-      exit(1);
+      return 1;
     }
 
     if (listen(sockfd, 1) == -1) {
       perror("listen");
-      exit(1);
-    } 
-    
+      return 1;
+    }
+
     addr_size = sizeof their_addr;
 
     if ((new_fd = accept(sockfd, (struct sockaddr *)&their_addr, &addr_size)) == -1) {
       perror("accept");
-      exit(1);
-    } 
+      return 1;
+    }
 
     for (i = 0; i < count; i++) {
 
@@ -131,12 +131,12 @@ int main(int argc, char *argv[])
 
     if ((sockfd = socket(res->ai_family, res->ai_socktype, res->ai_protocol)) == -1) {
       perror("socket");
-      exit(1);
+      return 1;
     }
 
     if (connect(sockfd, res->ai_addr, res->ai_addrlen) == -1) {
       perror("connect");
-      exit(1);
+      return 1;
     }
 
     gettimeofday(&start, NULL);
