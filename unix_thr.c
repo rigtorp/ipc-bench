@@ -1,4 +1,4 @@
-/* 
+/*
     Measure throughput of IPC using unix domain sockets.
 
 
@@ -63,17 +63,17 @@ int main(int argc, char *argv[])
     perror("socketpair");
     exit(1);
   }
-  
-  if (!fork()) {  
+
+  if (!fork()) {
     /* child */
 
-    for (i = 0; i < count; i++) {      
+    for (i = 0; i < count; i++) {
       if (read(fds[1], buf, size) != size) {
         perror("read");
 	exit(1);
       }
     }
-  } else { 
+  } else {
     /* parent */
   
     gettimeofday(&start, NULL);
@@ -93,6 +93,6 @@ int main(int argc, char *argv[])
     printf("average throughput: %lli msg/s\n", (count * (int64_t) 1e6) / delta);
     printf("average throughput: %lli Mb/s\n", (((count * (int64_t) 1e6) / delta) * size * 8) / (int64_t) 1e6);
   }
-  
+
   return 0;
 }

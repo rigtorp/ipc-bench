@@ -17,8 +17,6 @@ int main(void)
   key_t key;
   struct timespec *shm;
 
-
-
   struct timespec start, stop;
 
   int64_t delta;
@@ -33,7 +31,7 @@ int main(void)
    * "5678".
    */
   key = 5678;
-  
+
   if (!fork()) {
 
     /*
@@ -83,20 +81,20 @@ int main(void)
       start = *shm;
       delta = ((stop.tv_sec - start.tv_sec) * (int64_t) 1000000000 +
                stop.tv_nsec - start.tv_nsec);
-      
+
       if (delta > max)
         max = delta;
       else if (delta < min)
         min = delta;
-      
+
       sum += delta;
       count++;
-      
+
       if (!(count % 100)) {
         printf("%lli %lli %lli\n", max, min, sum / count);
       }
     }
   }
-  
+
   return 0;
 }

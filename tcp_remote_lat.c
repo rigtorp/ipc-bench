@@ -1,4 +1,4 @@
-/* 
+/*
     Measure latency of IPC using tcp sockets
 
 
@@ -79,7 +79,7 @@ int main(int argc, char *argv[])
     fprintf(stderr, "getaddrinfo: %s\n", gai_strerror(ret));
     return 1;
   }
-    
+
   if ((sockfd = socket(res->ai_family, res->ai_socktype, res->ai_protocol)) == -1) {
     perror("socket");
     exit(1);
@@ -94,7 +94,7 @@ int main(int argc, char *argv[])
     fprintf(stderr, "getaddrinfo: %s\n", gai_strerror(ret));
     return 1;
   }
-    
+
   if (connect(sockfd, res->ai_addr, res->ai_addrlen) == -1) {
     perror("connect");
     exit(1);
@@ -112,8 +112,8 @@ int main(int argc, char *argv[])
     for (sofar = 0; sofar < size; ) {
       len = read(sockfd, buf, size - sofar);
       if (len == -1) {
-	perror("read");
-	return 1;
+        perror("read");
+        return 1;
       }
       sofar += len;
     }
@@ -126,6 +126,6 @@ int main(int argc, char *argv[])
 	   stop.tv_usec - start.tv_usec);
     
   printf("average latency: %lli us\n", delta / (count * 2));
-  
+
   return 0;
 }

@@ -1,4 +1,4 @@
-/* 
+/*
     Measure latency of IPC using unix domain sockets
 
 
@@ -66,12 +66,12 @@ int main(int argc, char *argv[])
 
   if (!fork()) {  /* child */
     for (i = 0; i < count; i++) {
-      
+
       if (read(sv[1], buf, size) != size) {
         perror("read");
         return 1;
       }
-      
+
       if (write(sv[1], buf, size) != size) {
         perror("write");
         return 1;
@@ -103,6 +103,6 @@ int main(int argc, char *argv[])
     printf("average latency: %lli us\n", delta / (count * 2));
 
   }
-  
+
   return 0;
 }

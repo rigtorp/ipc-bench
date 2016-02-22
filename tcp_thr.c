@@ -1,4 +1,4 @@
-/* 
+/*
     Measure throughput of IPC using tcp sockets
 
 
@@ -98,14 +98,14 @@ int main(int argc, char *argv[])
       perror("bind");
       exit(1);
     }
-    
+
     if (listen(sockfd, 1) == -1) {
       perror("listen");
       exit(1);
     } 
     
     addr_size = sizeof their_addr;
-    
+
     if ((new_fd = accept(sockfd, (struct sockaddr *)&their_addr, &addr_size)) == -1) {
       perror("accept");
       exit(1);
@@ -119,21 +119,21 @@ int main(int argc, char *argv[])
       }
       sofar += len;
     }
-  } else { 
+  } else {
     /* parent */
 
     sleep(1);
-    
+
     if ((sockfd = socket(res->ai_family, res->ai_socktype, res->ai_protocol)) == -1) {
       perror("socket");
       exit(1);
     }
-    
+
     if (connect(sockfd, res->ai_addr, res->ai_addrlen) == -1) {
       perror("connect");
       exit(1);
     }
-    
+
     if (setsockopt(sockfd, IPPROTO_TCP, TCP_NODELAY, &yes, sizeof(int)) == -1) {
       perror("setsockopt");
       exit(1);
@@ -156,6 +156,6 @@ int main(int argc, char *argv[])
     printf("average throughput: %lli msg/s\n", (count * (int64_t) 1e6) / delta);
     printf("average throughput: %lli Mb/s\n", (((count * (int64_t) 1e6) / delta) * size * 8) / (int64_t) 1e6);
   }
-  
+
   return 0;
 }

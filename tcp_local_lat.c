@@ -1,4 +1,4 @@
-/* 
+/*
     Measure latency of IPC using tcp sockets
 
 
@@ -94,35 +94,35 @@ int main(int argc, char *argv[])
     perror("bind");
     exit(1);
   }
-    
+
   if (listen(sockfd, 1) == -1) {
     perror("listen");
     exit(1);
   } 
     
   addr_size = sizeof their_addr;
-    
+
   if ((new_fd = accept(sockfd, (struct sockaddr *)&their_addr, &addr_size)) == -1) {
     perror("accept");
     exit(1);
   } 
 
   for (i = 0; i < count; i++) {
-      
+
     for (sofar = 0; sofar < size; ) {
       len = read(new_fd, buf, size - sofar);
       if (len == -1) {
-	perror("read");
-	return 1;
+        perror("read");
+        return 1;
       }
       sofar += len;
     }
-            
+
     if (write(new_fd, buf, size) != size) {
       perror("write");
       return 1;
     }
   }
-  
+
   return 0;
 }
