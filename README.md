@@ -21,3 +21,8 @@ real-time OS it will give you the intra core communication
 latency.
 
 This software is distributed under the MIT License.
+
+Credits
+-------
+
+* *desbma* for adding cross platform support for clock_gettime

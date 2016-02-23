@@ -2,7 +2,7 @@
     Measure throughput of IPC using unix domain sockets.
 
 
-    Copyright (c) 2010 Erik Rigtorp <erik@rigtorp.com>
+    Copyright (c) 2016 Erik Rigtorp <erik@rigtorp.se>
 
     Permission is hereby granted, free of charge, to any person
     obtaining a copy of this software and associated documentation
@@ -26,21 +26,19 @@
     OTHER DEALINGS IN THE SOFTWARE.
 */
 
-
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/socket.h>
 #include <time.h>
-#include <stdint.h>
 #include <unistd.h>
 
-#if defined(_POSIX_TIMERS) && (_POSIX_TIMERS > 0) && defined(_POSIX_MONOTONIC_CLOCK)
+#if defined(_POSIX_TIMERS) && (_POSIX_TIMERS > 0) &&                           \
+    defined(_POSIX_MONOTONIC_CLOCK)
 #define HAS_CLOCK_GETTIME_MONOTONIC
 #endif
 
-
-int main(int argc, char *argv[])
-{
+int main(int argc, char *argv[]) {
   int fds[2]; /* the pair of socket descriptors */
   int size;
   char *buf;
@@ -52,7 +50,7 @@ int main(int argc, char *argv[])
 #endif
 
   if (argc != 3) {
-    printf ("usage: unix_thr <message-size> <message-count>\n");
+    printf("usage: unix_thr <message-size> <message-count>\n");
     return 1;
   }
 
@@ -66,7 +64,7 @@ int main(int argc, char *argv[])
   }
 
   printf("message size: %i octets\n", size);
-  printf("message count: %lli\n", count);
+  printf("message count: %li\n", count);
 
   if (socketpair(AF_UNIX, SOCK_STREAM, 0, fds) == -1) {
     perror("socketpair");
@@ -83,7 +81,7 @@ int main(int argc, char *argv[])
       }
     }
   } else {
-    /* parent */
+/* parent */
 
 #ifdef HAS_CLOCK_GETTIME_MONOTONIC
     if (clock_gettime(CLOCK_MONOTONIC, &start) == -1) {
@@ -119,13 +117,14 @@ int main(int argc, char *argv[])
       return 1;
     }
 
-    delta = (stop.tv_sec - start.tv_sec) * 1000000 +
-            (stop.tv_usec - start.tv_usec);
+    delta =
+        (stop.tv_sec - start.tv_sec) * 1000000 + (stop.tv_usec - start.tv_usec);
 
 #endif
 
-    printf("average throughput: %lli msg/s\n", (count * 1000000) / delta);
-    printf("average throughput: %lli Mb/s\n", (((count * 1000000) / delta) * size * 8) / 1000000);
+    printf("average throughput: %li msg/s\n", (count * 1000000) / delta);
+    printf("average throughput: %li Mb/s\n",
+           (((count * 1000000) / delta) * size * 8) / 1000000);
   }
 
   return 0;

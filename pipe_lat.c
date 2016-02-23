@@ -2,7 +2,7 @@
     Measure latency of IPC using unix domain sockets
 
 
-    Copyright (c) 2010 Erik Rigtorp <erik@rigtorp.com>
+    Copyright (c) 2016 Erik Rigtorp <erik@rigtorp.se>
 
     Permission is hereby granted, free of charge, to any person
     obtaining a copy of this software and associated documentation
@@ -26,21 +26,19 @@
     OTHER DEALINGS IN THE SOFTWARE.
 */
 
-
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/socket.h>
 #include <time.h>
-#include <stdint.h>
 #include <unistd.h>
 
-#if defined(_POSIX_TIMERS) && (_POSIX_TIMERS > 0) && defined(_POSIX_MONOTONIC_CLOCK)
+#if defined(_POSIX_TIMERS) && (_POSIX_TIMERS > 0) &&                           \
+    defined(_POSIX_MONOTONIC_CLOCK)
 #define HAS_CLOCK_GETTIME_MONOTONIC
 #endif
 
-
-int main(int argc, char *argv[])
-{
+int main(int argc, char *argv[]) {
   int ofds[2];
   int ifds[2];
 
@@ -54,7 +52,7 @@ int main(int argc, char *argv[])
 #endif
 
   if (argc != 3) {
-    printf ("usage: pipe_lat <message-size> <roundtrip-count>\n");
+    printf("usage: pipe_lat <message-size> <roundtrip-count>\n");
     return 1;
   }
 
@@ -68,7 +66,7 @@ int main(int argc, char *argv[])
   }
 
   printf("message size: %i octets\n", size);
-  printf("roundtrip count: %lli\n", count);
+  printf("roundtrip count: %li\n", count);
 
   if (pipe(ofds) == -1) {
     perror("pipe");
@@ -80,7 +78,7 @@ int main(int argc, char *argv[])
     return 1;
   }
 
-  if (!fork()) {  /* child */
+  if (!fork()) { /* child */
     for (i = 0; i < count; i++) {
 
       if (read(ifds[0], buf, size) != size) {
@@ -118,7 +116,6 @@ int main(int argc, char *argv[])
         perror("read");
         return 1;
       }
-
     }
 
 #ifdef HAS_CLOCK_GETTIME_MONOTONIC
@@ -136,13 +133,12 @@ int main(int argc, char *argv[])
       return 1;
     }
 
-    delta = (stop.tv_sec - start.tv_sec) * 1000000 +
-            (stop.tv_usec - start.tv_usec);
+    delta =
+        (stop.tv_sec - start.tv_sec) * 1000000 + (stop.tv_usec - start.tv_usec);
 
 #endif
 
-    printf("average latency: %lli us\n", delta / (count * 2));
-
+    printf("average latency: %li us\n", delta / (count * 2));
   }
 
   return 0;

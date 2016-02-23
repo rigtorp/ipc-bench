@@ -1,20 +1,46 @@
-/* Measure latency of IPC using shm */
+/*
+    Measure latency of IPC using shm
 
+    Copyright (c) 2016 Erik Rigtorp <erik@rigtorp.se>
+
+    Permission is hereby granted, free of charge, to any person
+    obtaining a copy of this software and associated documentation
+    files (the "Software"), to deal in the Software without
+    restriction, including without limitation the rights to use,
+    copy, modify, merge, publish, distribute, sublicense, and/or sell
+    copies of the Software, and to permit persons to whom the
+    Software is furnished to do so, subject to the following
+    conditions:
+
+    The above copyright notice and this permission notice shall be
+    included in all copies or substantial portions of the Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+    EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+    OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+    NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+    HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+    WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+    FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+    OTHER DEALINGS IN THE SOFTWARE.
+*/
+
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <time.h>
-#include <stdint.h>
-#include <sys/types.h>
 #include <sys/ipc.h>
 #include <sys/shm.h>
+#include <sys/time.h>
+#include <sys/types.h>
+#include <time.h>
+#include <unistd.h>
 
-int main(void)
-{
+int main(void) {
   int shmid;
   key_t key;
-  struct timespec *shm;
+  struct timeval *shm;
 
-  struct timespec start, stop;
+  struct timeval start, stop;
 
   int64_t delta;
 
@@ -42,7 +68,7 @@ int main(void)
     /*
      * Now we attach the segment to our data space.
      */
-    if ((shm = shmat(shmid, NULL, 0)) == (struct timespec*) -1) {
+    if ((shm = shmat(shmid, NULL, 0)) == (struct timeval *)-1) {
       perror("shmat");
       return 1;
     }
@@ -66,18 +92,19 @@ int main(void)
     /*
      * Now we attach the segment to our data space.
      */
-    if ((shm = shmat(shmid, NULL, 0)) == (struct timespec *) -1) {
+    if ((shm = shmat(shmid, NULL, 0)) == (struct timeval *)-1) {
       perror("shmat");
       return 1;
     }
 
     while (1) {
-      while ((shm->tv_sec == start.tv_sec) && (shm->tv_nsec == start.tv_nsec)) {}
+      while ((shm->tv_sec == start.tv_sec) && (shm->tv_usec == start.tv_usec)) {
+      }
 
       gettimeofday(&stop, NULL);
       start = *shm;
-      delta = ((stop.tv_sec - start.tv_sec) * (int64_t) 1000000000 +
-               stop.tv_nsec - start.tv_nsec);
+      delta = ((stop.tv_sec - start.tv_sec) * 1000000 + stop.tv_usec -
+               start.tv_usec);
 
       if (delta > max)
         max = delta;
@@ -88,7 +115,7 @@ int main(void)
       count++;
 
       if (!(count % 100)) {
-        printf("%lli %lli %lli\n", max, min, sum / count);
+        printf("%li %li %li\n", max, min, sum / count);
       }
     }
   }
