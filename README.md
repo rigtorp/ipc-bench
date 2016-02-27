@@ -13,13 +13,6 @@ throughput benchmarks:
 * unix doamin sockets
 * tcp sockets
 
-one way latency benchmarks:
-* shm
-
-The shared memory benchmark is a kind of "control". If run under a
-real-time OS it will give you the intra core communication
-latency.
-
 This software is distributed under the MIT License.
 
 Credits
