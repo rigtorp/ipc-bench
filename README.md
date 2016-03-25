@@ -10,7 +10,7 @@ ping-pong latency benchmarks:
 
 throughput benchmarks:
 * pipes
-* unix doamin sockets
+* unix domain sockets
 * tcp sockets
 
 This software is distributed under the MIT License.
