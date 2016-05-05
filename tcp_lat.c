@@ -184,8 +184,8 @@ int main(int argc, char *argv[]) {
       return 1;
     }
 
-    delta = ((stop.tv_sec - start.tv_sec) * 1000000 +
-             (stop.tv_nsec - start.tv_nsec) / 1000);
+    delta = ((stop.tv_sec - start.tv_sec) * 1000000000 +
+             (stop.tv_nsec - start.tv_nsec));
 
 #else
     if (gettimeofday(&stop, NULL) == -1) {
@@ -194,11 +194,11 @@ int main(int argc, char *argv[]) {
     }
 
     delta =
-        (stop.tv_sec - start.tv_sec) * 1000000 + (stop.tv_usec - start.tv_usec);
+        (stop.tv_sec - start.tv_sec) * 1000000000 + (stop.tv_usec - start.tv_usec) * 1000;
 
 #endif
 
-    printf("average latency: %li us\n", delta / (count * 2));
+    printf("average latency: %li ns\n", delta / (count * 2));
   }
 
   return 0;
