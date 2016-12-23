@@ -1,5 +1,5 @@
 
-CFLAGS = -g -Wall -O3
+CFLAGS = -g -Wall -O3 -lrt
 
 all: pipe_lat pipe_thr \
 	unix_lat unix_thr \
