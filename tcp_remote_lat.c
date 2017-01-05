@@ -120,7 +120,7 @@ int main(int argc, char *argv[]) {
   gettimeofday(&stop, NULL);
 
   delta =
-      ((stop.tv_sec - start.tv_sec) * 1000000000 + stop.tv_usec - start.tv_usec) * 1000;
+      (stop.tv_sec - start.tv_sec) * 1000000000 + (stop.tv_usec - start.tv_usec) * 1000;
 
   printf("average latency: %li ns\n", delta / (count * 2));
 
