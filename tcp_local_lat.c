@@ -68,7 +68,7 @@ int main(int argc, char *argv[]) {
   }
 
   printf("message size: %i octets\n", size);
-  printf("roundtrip count: %li\n", count);
+  printf("roundtrip count: %lli\n", count);
 
   memset(&hints, 0, sizeof hints);
   hints.ai_family = AF_UNSPEC; // use IPv4 or IPv6, whichever

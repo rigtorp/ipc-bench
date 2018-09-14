@@ -66,7 +66,7 @@ int main(int argc, char *argv[]) {
   }
 
   printf("message size: %i octets\n", size);
-  printf("roundtrip count: %li\n", count);
+  printf("roundtrip count: %lli\n", count);
 
   memset(&hints, 0, sizeof hints);
   hints.ai_family = AF_UNSPEC; // use IPv4 or IPv6, whichever
@@ -122,7 +122,7 @@ int main(int argc, char *argv[]) {
   delta =
       (stop.tv_sec - start.tv_sec) * 1000000000 + (stop.tv_usec - start.tv_usec) * 1000;
 
-  printf("average latency: %li ns\n", delta / (count * 2));
+  printf("average latency: %lli ns\n", delta / (count * 2));
 
   return 0;
 }

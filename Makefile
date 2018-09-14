@@ -1,5 +1,12 @@
+lrt:=$(shell echo "int main() {}"|gcc -x c - -lrt 2>&1)
 
-CFLAGS = -g -Wall -O3 -lrt
+ifeq ($(lrt),)
+  libs:=-lrt
+else
+  libs:=
+endif
+
+CFLAGS = -g -Wall -O3 $(libs) 
 
 all: pipe_lat pipe_thr \
 	unix_lat unix_thr \
