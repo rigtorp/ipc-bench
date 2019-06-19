@@ -1,1 +1,18 @@
 .idea/
+
+# makefiles
+CMakeCache.txt
+CMakeFiles/
+Makefile
+cmake_install.cmake
+
+# executables
+pipe_lat
+pipe_thr
+tcp_lat
+tcp_local_lat
+tcp_remote_lat
+tcp_thr
+udp_lat
+unix_lat
+unix_thr
