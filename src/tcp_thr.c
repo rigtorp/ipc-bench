@@ -43,7 +43,7 @@
 #endif
 
 int main(int argc, char *argv[]) {
-  int size;
+  ssize_t size;
   char *buf;
   int64_t count, i, delta;
 #ifdef HAS_CLOCK_GETTIME_MONOTONIC
@@ -53,7 +53,7 @@ int main(int argc, char *argv[]) {
 #endif
 
   ssize_t len;
-  size_t sofar;
+  ssize_t sofar;
 
   int yes = 1;
   int ret;
@@ -86,7 +86,7 @@ int main(int argc, char *argv[]) {
     return 1;
   }
 
-  printf("message size: %i octets\n", size);
+  printf("message size: %li octets\n", size);
   printf("message count: %li\n", count);
 
   if (!fork()) {

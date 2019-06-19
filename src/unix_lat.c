@@ -40,7 +40,7 @@
 
 int main(int argc, char *argv[]) {
   int sv[2]; /* the pair of socket descriptors */
-  int size;
+  ssize_t size;
   char *buf;
   int64_t count, i, delta;
 #ifdef HAS_CLOCK_GETTIME_MONOTONIC
@@ -63,7 +63,7 @@ int main(int argc, char *argv[]) {
     return 1;
   }
 
-  printf("message size: %i octets\n", size);
+  printf("message size: %li octets\n", size);
   printf("roundtrip count: %li\n", count);
 
   if (socketpair(AF_UNIX, SOCK_STREAM, 0, sv) == -1) {

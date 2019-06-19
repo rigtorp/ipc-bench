@@ -37,13 +37,13 @@
 #include <unistd.h>
 
 int main(int argc, char *argv[]) {
-  int size;
+  ssize_t size;
   char *buf;
   int64_t count, i, delta;
   struct timeval start, stop;
 
   ssize_t len;
-  size_t sofar;
+  ssize_t sofar;
 
   int ret;
   struct addrinfo hints;
@@ -65,7 +65,7 @@ int main(int argc, char *argv[]) {
     return 1;
   }
 
-  printf("message size: %i octets\n", size);
+  printf("message size: %li octets\n", size);
   printf("roundtrip count: %li\n", count);
 
   memset(&hints, 0, sizeof hints);
