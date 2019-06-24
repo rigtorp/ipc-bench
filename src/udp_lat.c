@@ -120,9 +120,14 @@ int main(int argc, char *argv[]) {
         sofar += len;
       }
 
-      if (sendto(sockfd, buf, size, 0, resParent->ai_addr, resParent->ai_addrlen) != size) {
-        perror("sendto");
-        return 1;
+      for (sofar = 0; sofar < size;) {
+        size_t chunk = (size > 65000) ? 65000 : size;
+        len = sendto(sockfd, buf, chunk, 0, resParent->ai_addr, resParent->ai_addrlen);
+        if (len == -1) {
+          perror("sendto");
+          return 1;
+        }
+        sofar += len;
       }
     }
   } else { /* parent */
@@ -159,9 +164,14 @@ int main(int argc, char *argv[]) {
 
     for (i = 0; i < count; i++) {
 
-      if (sendto(sockfd, buf, size, 0, resChild->ai_addr, resChild->ai_addrlen) != size) {
-        perror("sendto");
-        return 1;
+      for (sofar = 0; sofar < size;) {
+        size_t chunk = (size > 65000) ? 65000 : size;
+        len = sendto(sockfd, buf, chunk, 0, resChild->ai_addr, resChild->ai_addrlen);
+        if (len == -1) {
+          perror("sendto");
+          return 1;
+        }
+        sofar += len;
       }
 
       for (sofar = 0; sofar < size;) {

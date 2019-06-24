@@ -42,6 +42,30 @@
 #define HAS_CLOCK_GETTIME_MONOTONIC
 #endif
 
+int read_all(int fd, void *buf, size_t count) {
+  size_t sofar;
+  for (sofar = 0; sofar < count;) {
+    ssize_t rv = read(fd, buf, count);
+    if (rv < 0) {
+      return -1;
+    }
+    sofar += rv;
+  }
+  return 0;
+}
+
+int write_all(int fd, const void *buf, size_t count) {
+  size_t sofar;
+  for (sofar = 0; sofar < count;) {
+    ssize_t rv = write(fd, buf, count);
+    if (rv < 0) {
+      return -1;
+    }
+    sofar += rv;
+  }
+  return 0;
+}
+
 int main(int argc, char *argv[]) {
   ssize_t size;
   char *buf;
@@ -51,9 +75,6 @@ int main(int argc, char *argv[]) {
 #else
   struct timeval start, stop;
 #endif
-
-  ssize_t len;
-  ssize_t sofar;
 
   int yes = 1;
   int ret;
@@ -121,13 +142,11 @@ int main(int argc, char *argv[]) {
       return 1;
     }
 
-    for (sofar = 0; sofar < (count * size);) {
-      len = read(new_fd, buf, size);
-      if (len == -1) {
-        perror("read");
-        return 1;
+    for (i = 0; i < count; i++) {
+      if (read_all(new_fd, buf, size) == -1) {
+          perror("read");
+          return 1;
       }
-      sofar += len;
     }
   } else {
     /* parent */
@@ -163,7 +182,7 @@ int main(int argc, char *argv[]) {
 #endif
 
     for (i = 0; i < count; i++) {
-      if (write(sockfd, buf, size) != size) {
+      if (write_all(sockfd, buf, size) == -1) {
         perror("write");
         return 1;
       }
