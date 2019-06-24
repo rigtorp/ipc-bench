@@ -10,9 +10,10 @@ cmake_install.cmake
 pipe_lat
 pipe_thr
 tcp_lat
+tcp_thr
 tcp_local_lat
 tcp_remote_lat
-tcp_thr
 udp_lat
+udp_thr
 unix_lat
 unix_thr
