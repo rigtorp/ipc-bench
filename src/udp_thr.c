@@ -33,6 +33,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/socket.h>
+#include <sys/types.h>
+#include <sys/wait.h>
 #include <time.h>
 #include <unistd.h>
 
@@ -153,7 +155,8 @@ int main(int argc, char *argv[]) {
     }
 #endif
 
-    for (i = 0; i < count; i++) {
+    for (;;) {
+      int rv;
       for (sofar = 0; sofar < size;) {
         size_t chunk = size - sofar;
         chunk = (chunk > 65000) ? 65000 : chunk;
@@ -163,6 +166,12 @@ int main(int argc, char *argv[]) {
           return 1;
         }
         sofar += len;
+      }
+      rv = waitpid(-1, NULL, WNOHANG);
+      if (rv < 0) {
+        perror("waitpid");
+      } else if (rv > 0) {
+        break;
       }
     }
 
