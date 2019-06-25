@@ -104,10 +104,14 @@ int main(int argc, char *argv[]) {
 
   if (pipe_size < (8 * size)) {
     if (fcntl(fds[0], F_SETPIPE_SZ, 8 * size) < 0) {
+      fprintf(stderr, "cat /proc/sys/fs/pipe-max-size\n");
       perror("fcntl fds[0]");
+      return 1;
     }
     if (fcntl(fds[1], F_SETPIPE_SZ, 8 * size) < 0) {
+      fprintf(stderr, "cat /proc/sys/fs/pipe-max-size\n");
       perror("fcntl fds[1]");
+      return 1;
     }
   }
 
