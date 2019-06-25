@@ -155,7 +155,8 @@ int main(int argc, char *argv[]) {
 
     for (i = 0; i < count; i++) {
       for (sofar = 0; sofar < size;) {
-        size_t chunk = (size > 65000) ? 65000 : size;
+        size_t chunk = size - sofar;
+        chunk = (chunk > 65000) ? 65000 : chunk;
         len = sendto(sockfd, buf, chunk, 0, resChild->ai_addr, resChild->ai_addrlen);
         if (len == -1) {
           perror("sendto");

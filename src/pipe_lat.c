@@ -26,6 +26,9 @@
     OTHER DEALINGS IN THE SOFTWARE.
 */
 
+#define _GNU_SOURCE
+
+#include <fcntl.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -41,7 +44,7 @@
 int read_all(int fd, void *buf, size_t count) {
   size_t sofar;
   for (sofar = 0; sofar < count;) {
-    ssize_t rv = read(fd, buf, count);
+    ssize_t rv = read(fd, buf, count - sofar);
     if (rv < 0) {
       return -1;
     }
@@ -53,7 +56,7 @@ int read_all(int fd, void *buf, size_t count) {
 int write_all(int fd, const void *buf, size_t count) {
   size_t sofar;
   for (sofar = 0; sofar < count;) {
-    ssize_t rv = write(fd, buf, count);
+    ssize_t rv = write(fd, buf, count - sofar);
     if (rv < 0) {
       return -1;
     }
@@ -66,7 +69,7 @@ int main(int argc, char *argv[]) {
   int ofds[2];
   int ifds[2];
 
-  int size;
+  int pipe_size, size;
   char *buf;
   int64_t count, i, delta;
 #ifdef HAS_CLOCK_GETTIME_MONOTONIC
@@ -100,6 +103,23 @@ int main(int argc, char *argv[]) {
   if (pipe(ifds) == -1) {
     perror("pipe");
     return 1;
+  }
+
+  pipe_size = fcntl(ofds[0], F_GETPIPE_SZ);
+
+  if (pipe_size < (8 * size)) {
+    if (fcntl(ofds[0], F_SETPIPE_SZ, 8 * size) < 0) {
+      perror("fcntl ofds[0]");
+    }
+    if (fcntl(ofds[1], F_SETPIPE_SZ, 8 * size) < 0) {
+      perror("fcntl ofds[1]");
+    }
+    if (fcntl(ifds[0], F_SETPIPE_SZ, 8 * size) < 0) {
+      perror("fcntl ifds[0]");
+    }
+    if (fcntl(ifds[1], F_SETPIPE_SZ, 8 * size) < 0) {
+      perror("fcntl ifds[1]");
+    }
   }
 
   if (!fork()) { /* child */

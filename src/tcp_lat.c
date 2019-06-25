@@ -43,7 +43,7 @@
 int read_all(int fd, void *buf, size_t count) {
   size_t sofar;
   for (sofar = 0; sofar < count;) {
-    ssize_t rv = read(fd, buf, count);
+    ssize_t rv = read(fd, buf, count - sofar);
     if (rv < 0) {
       return -1;
     }
@@ -55,7 +55,7 @@ int read_all(int fd, void *buf, size_t count) {
 int write_all(int fd, const void *buf, size_t count) {
   size_t sofar;
   for (sofar = 0; sofar < count;) {
-    ssize_t rv = write(fd, buf, count);
+    ssize_t rv = write(fd, buf, count - sofar);
     if (rv < 0) {
       return -1;
     }

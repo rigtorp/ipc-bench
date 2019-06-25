@@ -121,7 +121,8 @@ int main(int argc, char *argv[]) {
       }
 
       for (sofar = 0; sofar < size;) {
-        size_t chunk = (size > 65000) ? 65000 : size;
+        size_t chunk = size - sofar;
+        chunk = (chunk > 65000) ? 65000 : chunk;
         len = sendto(sockfd, buf, chunk, 0, resParent->ai_addr, resParent->ai_addrlen);
         if (len == -1) {
           perror("sendto");
