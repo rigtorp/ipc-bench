@@ -38,20 +38,56 @@
 #include <time.h>
 #include <unistd.h>
 
+#define UNUSED(x) (void)(x)
+
 #if defined(_POSIX_TIMERS) && (_POSIX_TIMERS > 0) &&                           \
     defined(_POSIX_MONOTONIC_CLOCK)
 #define HAS_CLOCK_GETTIME_MONOTONIC
 #endif
 
-int main(int argc, char *argv[]) {
-  ssize_t size;
-  char *buf;
-  int64_t count, i, delta;
 #ifdef HAS_CLOCK_GETTIME_MONOTONIC
-  struct timespec start, stop;
+struct timespec start, stop;
 #else
-  struct timeval start, stop;
+struct timeval start, stop;
 #endif
+
+ssize_t size;
+int64_t count;
+
+void child_terminated(int signum)
+{
+  int64_t delta;
+  UNUSED(signum);
+  wait(NULL);
+#ifdef HAS_CLOCK_GETTIME_MONOTONIC
+  if (clock_gettime(CLOCK_MONOTONIC, &stop) == -1) {
+    perror("clock_gettime");
+    exit(1);
+  }
+
+  delta = ((stop.tv_sec - start.tv_sec) * 1000000 +
+            (stop.tv_nsec - start.tv_nsec) / 1000);
+
+#else
+  if (gettimeofday(&stop, NULL) == -1) {
+    perror("gettimeofday");
+    return 1;
+  }
+
+  delta =
+      (stop.tv_sec - start.tv_sec) * 1000000 + (stop.tv_usec - start.tv_usec);
+
+#endif
+
+  printf("average throughput: %li msg/s\n", (count * 1000000) / delta);
+  printf("average throughput: %li Mb/s\n",
+          (((count * 1000000) / delta) * size * 8) / 1000000);
+  exit(0);
+}
+
+int main(int argc, char *argv[]) {
+  char *buf;
+  int64_t i;
 
   ssize_t len;
   ssize_t sofar;
@@ -93,6 +129,8 @@ int main(int argc, char *argv[]) {
   printf("message size: %li octets\n", size);
   printf("message count: %li\n", count);
 
+
+  signal(SIGCHLD, child_terminated);
   if (!fork()) {
     /* child */
 
@@ -156,7 +194,6 @@ int main(int argc, char *argv[]) {
 #endif
 
     for (;;) {
-      int rv;
       for (sofar = 0; sofar < size;) {
         size_t chunk = size - sofar;
         chunk = (chunk > 65000) ? 65000 : chunk;
@@ -167,37 +204,7 @@ int main(int argc, char *argv[]) {
         }
         sofar += len;
       }
-      rv = waitpid(-1, NULL, WNOHANG);
-      if (rv < 0) {
-        perror("waitpid");
-      } else if (rv > 0) {
-        break;
-      }
     }
-
-#ifdef HAS_CLOCK_GETTIME_MONOTONIC
-    if (clock_gettime(CLOCK_MONOTONIC, &stop) == -1) {
-      perror("clock_gettime");
-      return 1;
-    }
-
-    delta = ((stop.tv_sec - start.tv_sec) * 1000000 +
-             (stop.tv_nsec - start.tv_nsec) / 1000);
-
-#else
-    if (gettimeofday(&stop, NULL) == -1) {
-      perror("gettimeofday");
-      return 1;
-    }
-
-    delta =
-        (stop.tv_sec - start.tv_sec) * 1000000 + (stop.tv_usec - start.tv_usec);
-
-#endif
-
-    printf("average throughput: %li msg/s\n", (count * 1000000) / delta);
-    printf("average throughput: %li Mb/s\n",
-           (((count * 1000000) / delta) * size * 8) / 1000000);
   }
 
   return 0;
