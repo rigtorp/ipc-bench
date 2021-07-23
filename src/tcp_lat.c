@@ -85,7 +85,7 @@ int main(int argc, char *argv[]) {
   }
 
   printf("message size: %i octets\n", size);
-  printf("roundtrip count: %li\n", count);
+  printf("roundtrip count: %lli\n", count);
 
   if (!fork()) { /* child */
 
@@ -198,7 +198,7 @@ int main(int argc, char *argv[]) {
 
 #endif
 
-    printf("average latency: %li ns\n", delta / (count * 2));
+    printf("average latency: %lli ns\n", delta / (count * 2));
   }
 
   return 0;

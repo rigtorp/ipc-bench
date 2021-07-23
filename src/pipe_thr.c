@@ -123,8 +123,8 @@ int main(int argc, char *argv[]) {
 
 #endif
 
-    printf("average throughput: %li msg/s\n", (count * 1000000) / delta);
-    printf("average throughput: %li Mb/s\n",
+    printf("average throughput: %lli msg/s\n", (count * 1000000) / delta);
+    printf("average throughput: %lli Mb/s\n",
            (((count * 1000000) / delta) * size * 8) / 1000000);
   }
 
