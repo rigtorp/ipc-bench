@@ -17,23 +17,6 @@ jobs:
         cd build
         ctest --output-on-failure
         
-  build-windows:
-
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: windows-latest
-    
-    steps:
-    - uses: actions/checkout@v1
-    - name: Build & Test
-      run: | 
-        cmake -E remove_directory build
-        cmake -B build -S .
-        cmake --build build --config Debug
-        cd build
-        ctest --output-on-failure
-
   build-macos:
 
     runs-on: macOS-latest

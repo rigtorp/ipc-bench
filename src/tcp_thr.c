@@ -26,6 +26,8 @@
     OTHER DEALINGS IN THE SOFTWARE.
 */
 
+#define __STDC_FORMAT_MACROS
+#include <inttypes.h>
 #include <netdb.h>
 #include <netinet/tcp.h>
 #include <stdint.h>
@@ -33,6 +35,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/socket.h>
+#include <sys/time.h>
 #include <time.h>
 #include <unistd.h>
 
@@ -86,7 +89,7 @@ int main(int argc, char *argv[]) {
   }
 
   printf("message size: %i octets\n", size);
-  printf("message count: %li\n", count);
+  printf("message count: %" PRId64 "\n", count);
 
   if (!fork()) {
     /* child */
@@ -188,8 +191,9 @@ int main(int argc, char *argv[]) {
 
 #endif
 
-    printf("average throughput: %li msg/s\n", (count * 1000000) / delta);
-    printf("average throughput: %li Mb/s\n",
+    printf("average throughput: %" PRId64 " msg/s\n",
+           (count * 1000000) / delta);
+    printf("average throughput: %" PRId64 " Mb/s\n",
            (((count * 1000000) / delta) * size * 8) / 1000000);
   }
 

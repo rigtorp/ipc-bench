@@ -26,12 +26,15 @@
     OTHER DEALINGS IN THE SOFTWARE.
 */
 
+#define __STDC_FORMAT_MACROS
+#include <inttypes.h>
 #include <netdb.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <sys/socket.h>
+#include <sys/time.h>
 #include <time.h>
 #include <unistd.h>
 
@@ -85,7 +88,7 @@ int main(int argc, char *argv[]) {
   }
 
   printf("message size: %i octets\n", size);
-  printf("roundtrip count: %li\n", count);
+  printf("roundtrip count: %" PRId64 "\n", count);
 
   if (!fork()) { /* child */
 
@@ -193,12 +196,12 @@ int main(int argc, char *argv[]) {
       return 1;
     }
 
-    delta =
-        (stop.tv_sec - start.tv_sec) * 1000000000 + (stop.tv_usec - start.tv_usec) * 1000;
+    delta = (stop.tv_sec - start.tv_sec) * 1000000000 +
+            (stop.tv_usec - start.tv_usec) * 1000;
 
 #endif
 
-    printf("average latency: %li ns\n", delta / (count * 2));
+    printf("average latency: %" PRId64 " ns\n", delta / (count * 2));
   }
 
   return 0;
