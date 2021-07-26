@@ -30,7 +30,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/socket.h>
-#include <sys/time.h>
+#include <time.h>
 #include <unistd.h>
 
 #if defined(_POSIX_TIMERS) && (_POSIX_TIMERS > 0) &&                           \
