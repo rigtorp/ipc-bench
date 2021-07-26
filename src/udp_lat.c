@@ -26,6 +26,8 @@
     OTHER DEALINGS IN THE SOFTWARE.
 */
 
+#define __STDC_FORMAT_MACROS
+#include <inttypes.h>
 #include <netdb.h>
 #include <stdint.h>
 #include <stdio.h>
@@ -89,12 +91,12 @@ int main(int argc, char *argv[]) {
   }
 
   printf("message size: %i octets\n", size);
-  printf("roundtrip count: %lli\n", count);
+  printf("roundtrip count: %" PRId64 "\n", count);
 
   if (!fork()) { /* child */
 
-    if ((sockfd = socket(resChild->ai_family, resChild->ai_socktype, resChild->ai_protocol)) ==
-        -1) {
+    if ((sockfd = socket(resChild->ai_family, resChild->ai_socktype,
+                         resChild->ai_protocol)) == -1) {
       perror("socket");
       return 1;
     }
@@ -112,7 +114,8 @@ int main(int argc, char *argv[]) {
     for (i = 0; i < count; i++) {
 
       for (sofar = 0; sofar < size;) {
-        len = recvfrom(sockfd, buf, size - sofar, 0, resParent->ai_addr, &resParent->ai_addrlen);
+        len = recvfrom(sockfd, buf, size - sofar, 0, resParent->ai_addr,
+                       &resParent->ai_addrlen);
         if (len == -1) {
           perror("recvfrom");
           return 1;
@@ -120,7 +123,8 @@ int main(int argc, char *argv[]) {
         sofar += len;
       }
 
-      if (sendto(sockfd, buf, size, 0, resParent->ai_addr, resParent->ai_addrlen) != size) {
+      if (sendto(sockfd, buf, size, 0, resParent->ai_addr,
+                 resParent->ai_addrlen) != size) {
         perror("sendto");
         return 1;
       }
@@ -129,8 +133,8 @@ int main(int argc, char *argv[]) {
 
     sleep(1);
 
-    if ((sockfd = socket(resParent->ai_family, resParent->ai_socktype, resParent->ai_protocol)) ==
-        -1) {
+    if ((sockfd = socket(resParent->ai_family, resParent->ai_socktype,
+                         resParent->ai_protocol)) == -1) {
       perror("socket");
       return 1;
     }
@@ -159,13 +163,15 @@ int main(int argc, char *argv[]) {
 
     for (i = 0; i < count; i++) {
 
-      if (sendto(sockfd, buf, size, 0, resChild->ai_addr, resChild->ai_addrlen) != size) {
+      if (sendto(sockfd, buf, size, 0, resChild->ai_addr,
+                 resChild->ai_addrlen) != size) {
         perror("sendto");
         return 1;
       }
 
       for (sofar = 0; sofar < size;) {
-        len = recvfrom(sockfd, buf, size - sofar, 0, resChild->ai_addr, &resChild->ai_addrlen);
+        len = recvfrom(sockfd, buf, size - sofar, 0, resChild->ai_addr,
+                       &resChild->ai_addrlen);
         if (len == -1) {
           perror("read");
           return 1;
@@ -189,12 +195,12 @@ int main(int argc, char *argv[]) {
       return 1;
     }
 
-    delta =
-        (stop.tv_sec - start.tv_sec) * 1000000000 + (stop.tv_usec - start.tv_usec) * 1000;
+    delta = (stop.tv_sec - start.tv_sec) * 1000000000 +
+            (stop.tv_usec - start.tv_usec) * 1000;
 
 #endif
 
-    printf("average latency: %lli ns\n", delta / (count * 2));
+    printf("average latency: %" PRId64 " ns\n", delta / (count * 2));
   }
 
   return 0;

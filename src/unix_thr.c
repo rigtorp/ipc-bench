@@ -26,6 +26,8 @@
     OTHER DEALINGS IN THE SOFTWARE.
 */
 
+#define __STDC_FORMAT_MACROS
+#include <inttypes.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -65,7 +67,7 @@ int main(int argc, char *argv[]) {
   }
 
   printf("message size: %i octets\n", size);
-  printf("message count: %li\n", count);
+  printf("message count: %" PRId64 "\n", count);
 
   if (socketpair(AF_UNIX, SOCK_STREAM, 0, fds) == -1) {
     perror("socketpair");
@@ -123,8 +125,9 @@ int main(int argc, char *argv[]) {
 
 #endif
 
-    printf("average throughput: %li msg/s\n", (count * 1000000) / delta);
-    printf("average throughput: %li Mb/s\n",
+    printf("average throughput: %" PRId64 " msg/s\n",
+           (count * 1000000) / delta);
+    printf("average throughput: %" PRId64 " Mb/s\n",
            (((count * 1000000) / delta) * size * 8) / 1000000);
   }
 

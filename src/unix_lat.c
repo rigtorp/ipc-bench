@@ -26,6 +26,8 @@
     OTHER DEALINGS IN THE SOFTWARE.
 */
 
+#define __STDC_FORMAT_MACROS
+#include <inttypes.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -65,7 +67,7 @@ int main(int argc, char *argv[]) {
   }
 
   printf("message size: %i octets\n", size);
-  printf("roundtrip count: %li\n", count);
+  printf("roundtrip count: %" PRId64 "\n", count);
 
   if (socketpair(AF_UNIX, SOCK_STREAM, 0, sv) == -1) {
     perror("socketpair");
@@ -132,7 +134,7 @@ int main(int argc, char *argv[]) {
 
 #endif
 
-    printf("average latency: %li ns\n", delta / (count * 2));
+    printf("average latency: %" PRId64 " ns\n", delta / (count * 2));
   }
 
   return 0;
