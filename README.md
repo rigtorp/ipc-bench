@@ -1,7 +1,7 @@
 ipc-bench
 =========
 
-[![C/C++ CI](https://github.com/rigtorp/ipcbench/workflows/C/C++%20CI/badge.svg)](https://github.com/rigtorp/ipcbench/actions)
+[![C/C++ CI](https://github.com/rigtorp/ipc-bench/workflows/C/C++%20CI/badge.svg)](https://github.com/rigtorp/ipc-bench/actions)
 [![GitHub](https://img.shields.io/github/license/rigtorp/ipc-bench.svg)](https://github.com/rigtorp/ipc-bench/blob/master/LICENSE)
 [![Travis (.org)](https://img.shields.io/travis/rigtorp/ipc-bench.svg)](https://travis-ci.org/rigtorp/ipc-bench)
 

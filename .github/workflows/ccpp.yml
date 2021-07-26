@@ -19,11 +19,8 @@ jobs:
         
   build-windows:
 
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: windows-latest
-    
+    runs-on: windows-latest
+   
     steps:
     - uses: actions/checkout@v1
     - name: Build & Test
