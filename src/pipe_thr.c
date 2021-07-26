@@ -30,6 +30,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/socket.h>
+#include <sys/time.h>
 #include <time.h>
 #include <unistd.h>
 
@@ -82,7 +83,7 @@ int main(int argc, char *argv[]) {
       }
     }
   } else {
-/* parent */
+    /* parent */
 
 #ifdef HAS_CLOCK_GETTIME_MONOTONIC
     if (clock_gettime(CLOCK_MONOTONIC, &start) == -1) {

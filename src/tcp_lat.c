@@ -32,6 +32,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/socket.h>
+#include <sys/time.h>
 #include <time.h>
 #include <unistd.h>
 
@@ -193,8 +194,8 @@ int main(int argc, char *argv[]) {
       return 1;
     }
 
-    delta =
-        (stop.tv_sec - start.tv_sec) * 1000000000 + (stop.tv_usec - start.tv_usec) * 1000;
+    delta = (stop.tv_sec - start.tv_sec) * 1000000000 +
+            (stop.tv_usec - start.tv_usec) * 1000;
 
 #endif
 
