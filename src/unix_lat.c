@@ -120,7 +120,7 @@ int main(int argc, char *argv[]) {
       return 1;
     }
 
-    delta = ((stop.tv_sec - start.tv_sec) * 1000000000 +
+    delta = ((stop.tv_sec - start.tv_sec) * 1000000000LL +
              (stop.tv_nsec - start.tv_nsec));
 
 #else
@@ -129,8 +129,8 @@ int main(int argc, char *argv[]) {
       return 1;
     }
 
-    delta = (stop.tv_sec - start.tv_sec) * 1000000000 +
-            (stop.tv_usec - start.tv_usec) * 1000;
+    delta = (stop.tv_sec - start.tv_sec) * 1000000000LL +
+            (stop.tv_usec - start.tv_usec) * 1000LL;
 
 #endif
 
