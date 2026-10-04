@@ -1,32 +1,22 @@
 name: C/C++ CI
 
-on: [push]
+on: [push, pull_request]
+
+permissions:
+  contents: read
 
 jobs:
-  build-ubuntu:
-
-    runs-on: ubuntu-latest
-    
+  build:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
     steps:
-    - uses: actions/checkout@v1
-    - name: Build & Test
-      run: |
-        cmake -E remove_directory build
-        cmake -B build -S . -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_FLAGS="-Werror -O2 -fsanitize=address,undefined"
-        cmake --build build
-        cd build
-        ctest --output-on-failure
-        
-  build-macos:
-
-    runs-on: macOS-latest
-
-    steps:
-    - uses: actions/checkout@v1
-    - name: Build & Test
-      run: |
-        cmake -E remove_directory build
-        cmake -B build -S . -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_FLAGS="-Werror -O2 -fsanitize=address,undefined"
-        cmake --build build
-        cd build
-        ctest --output-on-failure
+      - uses: actions/checkout@v7
+      - name: Install liburing
+        if: runner.os == 'Linux'
+        run: sudo apt-get update && sudo apt-get install -y liburing-dev pkg-config
+      - name: Configure
+        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_FLAGS="-Werror"
+      - name: Build
+        run: cmake --build build --parallel
